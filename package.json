@@ -5,18 +5,18 @@
   "packageManager": "npm@10.9.0",
   "workspaces": [
     "frontend",
-    "back",
+    "backend",
     "contracts"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run dev -w frontend\" \"npm run dev -w back\"",
+    "dev": "concurrently \"npm run dev -w frontend\" \"npm run dev -w backend\"",
     "dev:frontend": "npm run dev -w frontend",
-    "dev:back": "npm run dev -w back",
-    "build": "npm run build -w frontend && npm run build -w back && npm run compile -w contracts",
+    "dev:backend": "npm run dev -w backend",
+    "build": "npm run build -w frontend && npm run build -w backend && npm run compile -w contracts",
     "build:frontend": "npm run build -w frontend",
-    "build:back": "npm run build -w back",
+    "build:backend": "npm run build -w backend",
     "build:contracts": "npm run compile -w contracts",
-    "lint": "npm run lint -w frontend && npm run lint -w back",
+    "lint": "npm run lint -w frontend && npm run lint -w backend",
     "test": "npm run test -w contracts"
   },
   "devDependencies": {

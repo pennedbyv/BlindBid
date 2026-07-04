@@ -9,8 +9,8 @@ cache/
 typechain-types/
 frontend/node_modules/
 frontend/dist/
-back/node_modules/
-back/dist/
+backend/node_modules/
+backend/dist/
 contracts/node_modules/
 contracts/artifacts/
 contracts/cache/
