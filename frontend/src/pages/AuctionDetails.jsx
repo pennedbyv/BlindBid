@@ -1,17 +1,18 @@
 import React from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useLocation, useParams } from 'react-router-dom';
 import PageContainer from '../components/layout/PageContainer';
 import { MOCK_AUCTIONS } from '../data/auctions';
 
 export default function AuctionDetails() {
   const { id } = useParams();
+  const location = useLocation();
   const auction = MOCK_AUCTIONS.find((entry) => entry.id === id);
 
   if (!auction) {
     return <Navigate to="/marketplace" replace />;
   }
   
-  const details = buildAuctionDetails(auction);
+  const details = buildAuctionDetails(auction, location.state);
 
   return (
     <div className="min-h-screen bg-background pt-24 pb-20">
@@ -166,7 +167,7 @@ function InfoCard({ icon, label, value, accent = false }) {
   );
 }
 
-function buildAuctionDetails(auction) {
+function buildAuctionDetails(auction, navigationState = null) {
   const base = {
     seller: 'Verified Seller',
     bidStatus: auction.type === 'pending' ? 'No bids yet' : '3 bids placed',
@@ -233,6 +234,9 @@ function buildAuctionDetails(auction) {
   return {
     ...auction,
     ...base,
-    ...(overrides[auction.id] || {})
+    ...(overrides[auction.id] || {}),
+    ...(navigationState?.statusOverride
+      ? { statusText: navigationState.statusOverride }
+      : {})
   };
 }
