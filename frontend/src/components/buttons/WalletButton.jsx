@@ -14,6 +14,9 @@ export default function WalletButton() {
   const { data: balanceData } = useBalance({
     address,
     chainId: 10143,
+    query: {
+      enabled: Boolean(address) && chainId === 10143,
+    },
   });
 
   const isMonadTestnet = chainId === 10143;
@@ -22,6 +25,14 @@ export default function WalletButton() {
     if (!addr) return '';
     return `${addr.substring(0, 6)}...${addr.substring(addr.length - 4)}`;
   };
+
+  const balanceString = !isConnected
+    ? '-- MON'
+    : !isMonadTestnet
+    ? 'Switch to Monad'
+    : balanceData && !isNaN(parseFloat(balanceData.formatted))
+    ? `${parseFloat(balanceData.formatted).toFixed(2)} ${balanceData.symbol}`
+    : '0.00 MON';
 
   // Close dropdown on click outside
   useEffect(() => {
@@ -161,11 +172,6 @@ export default function WalletButton() {
       </div>
     );
   }
-
-  // Connected & correct chain (Monad Testnet)
-  const balanceString = balanceData && !isNaN(parseFloat(balanceData.formatted))
-    ? `${parseFloat(balanceData.formatted).toFixed(2)} ${balanceData.symbol}`
-    : '8.25 MON';
 
   return (
     <div className="flex items-center gap-3">

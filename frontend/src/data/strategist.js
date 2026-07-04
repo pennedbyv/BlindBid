@@ -1,3 +1,7 @@
+const meme1Image = new URL('../../meme1.jpeg', import.meta.url).href;
+const meme2Image = new URL('../../meme2.jpeg', import.meta.url).href;
+const meme3Image = new URL('../../meme3.jpeg', import.meta.url).href;
+
 export const MOCK_STRATEGIST_INVENTORY = [
   {
     id: "cyberpunk-442",
@@ -6,7 +10,7 @@ export const MOCK_STRATEGIST_INVENTORY = [
     rarity: "RARE",
     estimatedValue: 12.5,
     category: "Monad Primates",
-    image: "meme1.jpeg"
+    image: meme1Image
   },
   {
     id: "shard-genesis",
@@ -15,7 +19,7 @@ export const MOCK_STRATEGIST_INVENTORY = [
     rarity: "LEGENDARY",
     estimatedValue: 45.0,
     category: "Void Shards",
-    image: "meme2.jpeg"
+    image: meme2Image
   },
   {
     id: "token-102",
@@ -24,6 +28,6 @@ export const MOCK_STRATEGIST_INVENTORY = [
     rarity: "COMMON",
     estimatedValue: 3.2,
     category: "Monad Genesis",
-    image: "meme3.jpeg"
+    image: meme3Image
   }
 ];

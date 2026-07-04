@@ -6,13 +6,24 @@ import { MOCK_STRATEGIST_INVENTORY } from '../data/strategist';
 
 export default function SellerDashboard() {
   const navigate = useNavigate();
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, chainId } = useAccount();
   
   // Retrieve Monad Testnet Balance
   const { data: balanceData } = useBalance({
     address,
-    chainId: 10143
+    chainId: 10143,
+    query: {
+      enabled: Boolean(address) && chainId === 10143,
+    }
   });
+
+  const balanceLabel = !isConnected
+    ? '-- MON'
+    : chainId !== 10143
+    ? 'Switch to Monad'
+    : balanceData && !isNaN(parseFloat(balanceData.formatted))
+    ? `${parseFloat(balanceData.formatted).toFixed(2)} ${balanceData.symbol}`
+    : '0.00 MON';
 
   const [selectedIds, setSelectedIds] = useState(['cyberpunk-442', 'shard-genesis']); // Card 1 and 2 selected by default
   const [activeTab, setActiveTab] = useState('All');
@@ -80,7 +91,7 @@ export default function SellerDashboard() {
                 <span>{isConnected ? `${address.substring(0, 6)}...${address.substring(address.length - 4)}` : '0x7F...A2B4'}</span>
               </div>
               <span className="font-mono text-sm text-secondary font-bold">
-                {balanceData && !isNaN(parseFloat(balanceData.formatted)) ? `${parseFloat(balanceData.formatted).toFixed(2)} MON` : '8.25 MON'}
+                {balanceLabel}
               </span>
             </div>
 

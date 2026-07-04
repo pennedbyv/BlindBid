@@ -14,7 +14,7 @@ export default function Footer({ variant = 'landing' }) {
             <a href="#docs" className="hover:text-secondary transition-colors font-label">Docs</a>
             <a href="#support" className="hover:text-secondary transition-colors font-label">Support</a>
             <div className="h-4 w-[1px] bg-white/10 mx-2"></div>
-            <span className="font-mono text-mono-sm opacity-55">© 2024 BlindBid. Precision Engineered.</span>
+            <span className="font-mono text-mono-sm opacity-55">© 2026 BlindBid. Precision Engineered.</span>
           </div>
         </div>
       </footer>
@@ -28,7 +28,7 @@ export default function Footer({ variant = 'landing' }) {
         <div className="flex flex-col gap-6 items-center md:items-start">
           <span className="font-headline text-headline-md text-secondary tracking-tighter uppercase font-extrabold">BlindBid</span>
           <p className="font-mono text-mono-sm text-on-surface-variant max-w-xs text-center md:text-left opacity-80 leading-relaxed">
-            © 2024 BlindBid. Precision Engineered. Decentralized Intelligence for Liquid Markets.
+            © 2026 BlindBid. Precision Engineered. Decentralized Intelligence for Liquid Markets.
           </p>
         </div>
         <div className="flex flex-wrap justify-center gap-10">
