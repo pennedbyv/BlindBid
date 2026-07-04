@@ -1,0 +1,16 @@
+node_modules/
+dist/
+coverage/
+.env
+.env.local
+.env.*.local
+artifacts/
+cache/
+typechain-types/
+frontend/node_modules/
+frontend/dist/
+back/node_modules/
+back/dist/
+contracts/node_modules/
+contracts/artifacts/
+contracts/cache/

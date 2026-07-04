@@ -1,0 +1,25 @@
+{
+  "name": "blindbid",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "npm@10.9.0",
+  "workspaces": [
+    "frontend",
+    "back",
+    "contracts"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev -w frontend\" \"npm run dev -w back\"",
+    "dev:frontend": "npm run dev -w frontend",
+    "dev:back": "npm run dev -w back",
+    "build": "npm run build -w frontend && npm run build -w back && npm run compile -w contracts",
+    "build:frontend": "npm run build -w frontend",
+    "build:back": "npm run build -w back",
+    "build:contracts": "npm run compile -w contracts",
+    "lint": "npm run lint -w frontend && npm run lint -w back",
+    "test": "npm run test -w contracts"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}
