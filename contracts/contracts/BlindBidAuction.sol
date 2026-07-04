@@ -41,6 +41,7 @@ contract BlindBidAuction is ReentrancyGuard {
     struct Vault {
         NFTItem[] nfts;
         Auction auction;
+        address seller; // Added to preserve seller even if auction is deleted/cancelled
         string name;
         string description;
         AuctionPreview preview;
@@ -75,7 +76,7 @@ contract BlindBidAuction is ReentrancyGuard {
 
     modifier onlySellerOrOperator(uint256 vaultId) {
         require(
-            msg.sender == vaults[vaultId].auction.seller || msg.sender == operator,
+            msg.sender == vaults[vaultId].seller || msg.sender == operator,
             "Not authorized"
         );
         _;
@@ -83,7 +84,7 @@ contract BlindBidAuction is ReentrancyGuard {
 
     modifier onlySeller(uint256 vaultId) {
         require(
-            msg.sender == vaults[vaultId].auction.seller,
+            msg.sender == vaults[vaultId].seller,
             "Not vault seller"
         );
         _;
@@ -128,6 +129,7 @@ contract BlindBidAuction is ReentrancyGuard {
             );
         }
 
+        v.seller = msg.sender;
         v.auction.seller = msg.sender;
         v.name = name;
         v.description = description;
@@ -200,11 +202,13 @@ contract BlindBidAuction is ReentrancyGuard {
         require(!a.active, "Auction active");
         require(!a.ended, "Auction already ended");
 
+        address vaultSeller = v.seller;
+
         // return NFTs to seller
         for (uint256 i = 0; i < v.nfts.length; i++) {
             IERC721(v.nfts[i].nftAddress).transferFrom(
                 address(this),
-                a.seller,
+                vaultSeller,
                 v.nfts[i].tokenId
             );
         }
@@ -265,13 +269,13 @@ contract BlindBidAuction is ReentrancyGuard {
                 );
             }
 
-            payable(a.seller).transfer(a.currentBid);
+            payable(v.seller).transfer(a.currentBid);
             emit AuctionEnded(vaultId, a.highestBidder, a.currentBid);
         } else {
             for (uint256 i = 0; i < v.nfts.length; i++) {
                 IERC721(v.nfts[i].nftAddress).transferFrom(
                     address(this),
-                    a.seller,
+                    v.seller,
                     v.nfts[i].tokenId
                 );
             }
@@ -314,7 +318,7 @@ contract BlindBidAuction is ReentrancyGuard {
         Auction storage a = v.auction;
 
         require(
-            a.ended || msg.sender == a.seller || msg.sender == operator,
+            a.ended || msg.sender == v.seller || msg.sender == operator,
             "Auction not ended"
         );
 
@@ -322,7 +326,7 @@ contract BlindBidAuction is ReentrancyGuard {
             v.name,
             v.description,
             v.nfts,
-            a.seller,
+            v.seller,
             a.currentBid,
             a.highestBidder,
             a.lastBidTime,
@@ -387,7 +391,7 @@ contract BlindBidAuction is ReentrancyGuard {
         uint256 vaultId,
         address user
     ) external view returns (bool) {
-        return vaults[vaultId].auction.seller == user;
+        return vaults[vaultId].seller == user;
     }
 
     /**

@@ -1,0 +1,519 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>BlindBid | AI-Native Web3 Auctions</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Hanken+Grotesk:wght@500;600;800&amp;family=Geist:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-secondary-container": "#3d2c00",
+                "surface-variant": "#333539",
+                "error": "#ffb4ab",
+                "inverse-surface": "#e3e2e8",
+                "tertiary": "#c8c5d0",
+                "surface-dim": "#121318",
+                "primary-fixed": "#e4e1e9",
+                "on-error-container": "#ffdad6",
+                "surface-container-high": "#282a2f",
+                "tertiary-container": "#0f0e15",
+                "on-tertiary-fixed-variant": "#47464f",
+                "on-background": "#e3e2e8",
+                "tertiary-fixed": "#e5e1ec",
+                "surface-container-lowest": "#0d0e12",
+                "on-primary-fixed-variant": "#47464c",
+                "primary-container": "#0e0e13",
+                "surface-tint": "#c8c5cd",
+                "primary": "#c8c5cd",
+                "primary-fixed-dim": "#c8c5cd",
+                "on-tertiary-container": "#7d7a84",
+                "on-surface": "#e3e2e8",
+                "outline-variant": "#47464b",
+                "on-primary-fixed": "#1b1b20",
+                "surface": "#121318",
+                "inverse-primary": "#5f5e64",
+                "on-secondary": "#402d00",
+                "surface-bright": "#38393e",
+                "on-secondary-fixed": "#261a00",
+                "outline": "#929095",
+                "on-primary": "#303035",
+                "surface-container-low": "#1a1b20",
+                "on-primary-container": "#7c7a81",
+                "background": "#121318",
+                "secondary-container": "#bf8e00",
+                "error-container": "#93000a",
+                "secondary": "#f5be3e",
+                "on-error": "#690005",
+                "secondary-fixed": "#ffdfa0",
+                "tertiary-fixed-dim": "#c8c5d0",
+                "surface-container-highest": "#333539",
+                "surface-container": "#1e1f24",
+                "secondary-fixed-dim": "#f5be3e",
+                "on-tertiary-fixed": "#1c1b23",
+                "on-surface-variant": "#c8c5cb",
+                "on-secondary-fixed-variant": "#5c4300",
+                "on-tertiary": "#312f38",
+                "inverse-on-surface": "#2f3035"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "margin-desktop": "64px",
+                "margin-mobile": "20px",
+                "section-gap": "120px",
+                "unit": "8px",
+                "gutter": "24px",
+                "container-max": "1280px"
+            },
+            "fontFamily": {
+                "body-lg": ["Inter"],
+                "display-lg": ["Hanken Grotesk"],
+                "headline-md": ["Hanken Grotesk"],
+                "headline-lg": ["Hanken Grotesk"],
+                "label-md": ["Geist"],
+                "display-lg-mobile": ["Hanken Grotesk"],
+                "body-md": ["Inter"],
+                "mono-sm": ["Geist"]
+            },
+            "fontSize": {
+                "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                "headline-md": ["24px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                "headline-lg": ["32px", {"lineHeight": "1.3", "fontWeight": "500"}],
+                "label-md": ["14px", {"lineHeight": "1.0", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                "display-lg-mobile": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "mono-sm": ["12px", {"lineHeight": "1.4", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { background-color: #0E0E13; color: #e3e2e8; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24; }
+        .glass-card { background: rgba(23, 23, 31, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(42, 42, 50, 0.5); }
+        .hover-lift { transition: transform 0.4s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.4s ease; }
+        .hover-lift:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); border-color: #f5be3e; }
+        .timeline-line { background: linear-gradient(90deg, #f5be3e 0%, transparent 100%); height: 1px; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0E0E13; }
+        ::-webkit-scrollbar-thumb { background: #333539; border-radius: 10px; }
+    </style>
+</head>
+<body class="font-body-md overflow-x-hidden">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 z-50 w-full bg-surface/90 backdrop-blur-xl border-none">
+<div class="max-w-container-max mx-auto px-margin-desktop h-24 flex justify-between items-center w-full">
+<div class="flex items-center gap-12">
+<span class="font-headline-lg text-secondary tracking-tighter uppercase font-extrabold">BlindBid</span>
+<div class="hidden md:flex gap-8 items-center"><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors duration-300" href="#">Home</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors duration-300" href="#">Auctions</a><a class="font-label-md text-label-md text-secondary border-b border-secondary pb-1" href="#">AI Strategist ⭐</a></div>
+</div>
+<button class="px-8 py-3 bg-secondary text-on-secondary-fixed font-label-md text-label-md rounded-full scale-95 active:scale-90 transition-transform uppercase tracking-widest font-bold">Connect Wallet</button>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="relative min-h-screen flex items-center overflow-hidden pt-24">
+<!-- STITCH_SHADER_START:ANIMATION_2 class="absolute inset-0 w-full h-full opacity-40" -->
+<div class="absolute inset-0 w-full h-full opacity-40" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_2" style="display:block;width:100%;height:100%" width="1280" height="1024"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_2');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+varying vec2 v_texCoord;
+uniform float u_time;
+uniform vec2 u_resolution;
+
+void main() {
+    vec2 uv = v_texCoord;
+    
+    // Slow, subtle movement for a "Luxury AI" feel
+    float noise = sin(uv.x * 10.0 + u_time * 0.2) * cos(uv.y * 10.0 + u_time * 0.2) * 0.02;
+    
+    // Gradient from #0E0E13 to a slightly lighter dark grey
+    vec3 color1 = vec3(0.054, 0.054, 0.074); // #0E0E13
+    vec3 color2 = vec3(0.09, 0.09, 0.12);    // Slightly lighter
+    
+    vec3 finalColor = mix(color1, color2, uv.y + noise);
+    
+    // Add a very subtle grain
+    float grain = fract(sin(dot(uv, vec2(12.9898, 78.233))) * 43758.5453);
+    finalColor += (grain - 0.5) * 0.01;
+
+    gl_FragColor = vec4(finalColor, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_2 -->
+<div class="max-w-container-max mx-auto px-margin-desktop grid grid-cols-1 md:grid-cols-12 gap-gutter relative z-10">
+<div class="md:col-span-7 flex flex-col justify-center gap-8">
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-secondary/10 border border-secondary/20 rounded-full w-fit">
+<span class="material-symbols-outlined text-[14px] text-secondary">verified</span>
+<span class="font-mono-sm text-mono-sm text-secondary uppercase tracking-widest">Next-Gen Liquidity Layer</span>
+</div>
+<h1 class="font-display-lg text-display-lg text-on-surface md:text-display-lg max-w-2xl leading-[1.05]">
+                    The AI Auction Strategist for <span class="text-secondary">Blind NFT Bundle</span> Auctions
+                </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-lg">
+                    Autonomous agents orchestrating high-value bundle auctions on-chain. Precision engineered for the next generation of digital assets.
+                </p>
+<div class="flex flex-wrap gap-4 mt-4">
+<button class="px-10 py-5 bg-secondary text-on-secondary-fixed font-label-md text-label-md rounded-full flex items-center gap-2 hover:brightness-110 transition-all">
+                        Launch App
+                        <span class="material-symbols-outlined">arrow_outward</span>
+</button>
+<button class="px-10 py-5 border border-secondary text-secondary font-label-md text-label-md rounded-full hover:bg-secondary/5 transition-all">
+                        Watch Demo
+                    </button>
+</div>
+</div>
+<div class="md:col-span-5 relative h-[500px] md:h-auto">
+<!-- STITCH_THREEJS_START:ANIMATION_3 class="w-full h-full" -->
+<div class="w-full h-full" style="display:block;">
+<script src="https://ajax.googleapis.com/ajax/libs/threejs/r125/three.min.js"></script>
+<div id="threejs-container-ANIMATION_3" style="width:100%;height:100%"><canvas width="466" height="500" style="display: block; width: 466px; height: 500px;"></canvas><canvas width="466" height="500" style="display: block; width: 466px; height: 500px;"></canvas></div>
+<script>
+(function() {
+  const container = document.getElementById('threejs-container-ANIMATION_3');
+  const devicePixelRatio = window.devicePixelRatio || 1;
+  const width = container.clientWidth || window.innerWidth;
+const height = container.clientHeight || window.innerHeight;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+renderer.setSize(width, height);
+container.appendChild(renderer.domElement);
+
+// Gold color from design system: #D3A01E
+const goldColor = 0xD3A01E;
+
+// Central AI Brain (Abstract Sphere)
+const brainGeo = new THREE.IcosahedronGeometry(1.5, 3);
+const brainMat = new THREE.MeshStandardMaterial({ 
+    color: goldColor, 
+    wireframe: true, 
+    emissive: goldColor,
+    emissiveIntensity: 0.5 
+});
+const brain = new THREE.Mesh(brainGeo, brainMat);
+scene.add(brain);
+
+// Blockchain Ring (Cylinders in a circle)
+const blockchainGroup = new THREE.Group();
+const ringCount = 12;
+for (let i = 0; i < ringCount; i++) {
+    const boxGeo = new THREE.BoxGeometry(0.3, 0.3, 0.3);
+    const boxMat = new THREE.MeshLambertMaterial({ color: 0xFFFFFF });
+    const box = new THREE.Mesh(boxGeo, boxMat);
+    const angle = (i / ringCount) * Math.PI * 2;
+    box.position.x = Math.cos(angle) * 3;
+    box.position.z = Math.sin(angle) * 3;
+    blockchainGroup.add(box);
+}
+scene.add(blockchainGroup);
+
+// Lights
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+scene.add(ambientLight);
+const pointLight = new THREE.PointLight(goldColor, 1.5);
+pointLight.position.set(5, 5, 5);
+scene.add(pointLight);
+
+camera.position.z = 8;
+
+function animate() {
+    requestAnimationFrame(animate);
+    brain.rotation.y += 0.005;
+    brain.rotation.x += 0.002;
+    blockchainGroup.rotation.y -= 0.003;
+    renderer.render(scene, camera);
+}
+
+window.addEventListener('resize', () => {
+    const w = container.clientWidth || window.innerWidth;
+    const h = container.clientHeight || window.innerHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+});
+
+animate();
+})();
+</script>
+</div>
+<!-- STITCH_THREEJS_END:ANIMATION_3 -->
+</div>
+</div>
+</header>
+<!-- Features Section -->
+<section class="py-section-gap bg-surface relative">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="flex flex-col gap-4 mb-20 text-center items-center">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Architected for Precision</h2>
+<div class="w-24 h-1 bg-secondary"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- AI Strategist -->
+<div class="glass-card p-10 rounded-[22px] hover-lift flex flex-col gap-6 animate-fade-in-up">
+<div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="neurology">neurology</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">AI Strategist</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Neural networks calculating optimal entry and exit points for complex bundle acquisitions in real-time.</p>
+</div>
+<!-- Blind Bundle Auctions -->
+<div class="glass-card p-10 rounded-[22px] hover-lift flex flex-col gap-6 animate-fade-in-up">
+<div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="inventory_2">inventory_2</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Blind Bundles</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Sealed-bid mechanics prevent sniping and front-running, ensuring fair market value discovery for assets.</p>
+</div>
+<!-- Real Blockchain Execution -->
+<div class="glass-card p-10 rounded-[22px] hover-lift flex flex-col gap-6 animate-fade-in-up">
+<div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="account_balance_wallet">account_balance_wallet</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">On-Chain Fidelity</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Every strategy and execution is verified on the ledger, providing institutional-grade transparency.</p>
+</div>
+<!-- 60 Second Blitz -->
+<div class="glass-card p-10 rounded-[22px] hover-lift flex flex-col gap-6 md:col-span-1.5 animate-fade-in-up">
+<div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="bolt">bolt</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">60 Second Blitz</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Ultra-high-frequency auction windows for rapid asset rotation and liquid market participation.</p>
+</div>
+<!-- Natural Language Auctions -->
+<div class="glass-card p-10 rounded-[22px] hover-lift flex flex-col gap-6 md:col-span-1.5 animate-fade-in-up">
+<div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="chat_bubble_outline">chat_bubble_outline</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface">Natural Interface</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Command your auction bots using plain English. Complex multi-step trades, simplified into a chat.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- How it Works Section -->
+<section class="py-section-gap bg-surface-container-lowest">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<h2 class="font-headline-lg text-headline-lg text-on-surface text-center mb-24">The Execution Pipeline</h2>
+<div class="relative grid grid-cols-1 md:grid-cols-4 gap-12">
+<!-- Step 1 -->
+<div class="relative z-10 group">
+<div class="mb-8 w-16 h-16 rounded-full border border-secondary flex items-center justify-center bg-surface-container transition-all group-hover:bg-secondary group-hover:text-on-secondary">
+<span class="font-mono-sm text-mono-sm font-bold">01</span>
+</div>
+<h4 class="font-headline-md text-headline-md text-secondary mb-4">Strategize</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">AI agents analyze market sentiment and historical floor data to define bid parameters.</p>
+</div>
+<!-- Step 2 -->
+<div class="relative z-10 group">
+<div class="mb-8 w-16 h-16 rounded-full border border-secondary flex items-center justify-center bg-surface-container transition-all group-hover:bg-secondary group-hover:text-on-secondary">
+<span class="font-mono-sm text-mono-sm font-bold">02</span>
+</div>
+<h4 class="font-headline-md text-headline-md text-secondary mb-4">Bundle</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Assets are algorithmically grouped into high-synergy packs for maximized secondary value.</p>
+</div>
+<!-- Step 3 -->
+<div class="relative z-10 group">
+<div class="mb-8 w-16 h-16 rounded-full border border-secondary flex items-center justify-center bg-surface-container transition-all group-hover:bg-secondary group-hover:text-on-secondary">
+<span class="font-mono-sm text-mono-sm font-bold">03</span>
+</div>
+<h4 class="font-headline-md text-headline-md text-secondary mb-4">Execute</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Encrypted bids are placed on-chain. Sealed mechanics prevent disclosure until the window closes.</p>
+</div>
+<!-- Step 4 -->
+<div class="relative z-10 group">
+<div class="mb-8 w-16 h-16 rounded-full border border-secondary flex items-center justify-center bg-surface-container transition-all group-hover:bg-secondary group-hover:text-on-secondary">
+<span class="font-mono-sm text-mono-sm font-bold">04</span>
+</div>
+<h4 class="font-headline-md text-headline-md text-secondary mb-4">Settle</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Smart contracts instantly resolve ownership and distribute proceeds with sub-second latency.</p>
+</div>
+<!-- Connection Lines -->
+<div class="hidden md:block absolute top-8 left-16 right-16 h-px bg-outline-variant/30 -z-0">
+<div class="h-full bg-secondary w-0 group-hover:w-full transition-all duration-1000 ease-in-out"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Stats Section -->
+<section class="py-24 bg-surface">
+<div class="max-w-container-max mx-auto px-margin-desktop grid grid-cols-1 md:grid-cols-3 gap-gutter text-center">
+<div class="flex flex-col gap-2">
+<span class="font-mono-sm text-mono-sm text-secondary uppercase tracking-widest">Total Value Flow</span>
+<span class="font-display-lg text-display-lg text-on-surface">$2.4B+</span>
+</div>
+<div class="flex flex-col gap-2 border-x border-outline-variant/20">
+<span class="font-mono-sm text-mono-sm text-secondary uppercase tracking-widest">Successful Events</span>
+<span class="font-display-lg text-display-lg text-on-surface">60K+</span>
+</div>
+<div class="flex flex-col gap-2">
+<span class="font-mono-sm text-mono-sm text-secondary uppercase tracking-widest">Settlement Latency</span>
+<span class="font-display-lg text-display-lg text-on-surface">0.2s</span>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-section-gap relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-r from-secondary/5 to-transparent"></div>
+<div class="max-w-container-max mx-auto px-margin-desktop relative z-10 bg-surface-container-low p-16 rounded-[32px] border border-outline-variant/20 flex flex-col md:flex-row items-center justify-between gap-12">
+<div class="flex flex-col gap-6 max-w-xl">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Ready to transcend traditional trading?</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Deploy your first auction agent today and experience the precision of AI-native liquidity.</p>
+</div>
+<div class="flex flex-col gap-4 w-full md:w-auto">
+<button class="px-12 py-6 bg-secondary text-on-secondary-fixed font-headline-md text-headline-md rounded-xl hover:scale-105 transition-transform shadow-2xl shadow-secondary/20">
+                    Get Early Access
+                </button>
+<p class="font-mono-sm text-mono-sm text-center text-on-surface-variant opacity-60">Join 12,000+ elite traders</p>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest border-t border-outline-variant/10">
+<div class="max-w-container-max mx-auto px-margin-desktop py-section-gap flex flex-col md:flex-row justify-between items-center gap-gutter">
+<div class="flex flex-col gap-6 items-center md:items-start">
+<span class="font-headline-md text-secondary tracking-tighter uppercase font-extrabold">BlindBid</span>
+<p class="font-mono-sm text-mono-sm text-on-surface-variant max-w-xs text-center md:text-left">© 2024 BlindBid. Precision Engineered. Decentralized Intelligence for Liquid Markets.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-10">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors" href="#">Privacy</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors" href="#">Terms</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors" href="#">Governance</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors" href="#">Docs</a>
+</div>
+<div class="flex gap-6">
+<div class="w-10 h-10 rounded-full border border-outline-variant/30 flex items-center justify-center opacity-80 hover:opacity-100 hover:border-secondary transition-all cursor-pointer">
+<span class="material-symbols-outlined text-secondary text-sm" data-icon="share">share</span>
+</div>
+<div class="w-10 h-10 rounded-full border border-outline-variant/30 flex items-center justify-center opacity-80 hover:opacity-100 hover:border-secondary transition-all cursor-pointer">
+<span class="material-symbols-outlined text-secondary text-sm" data-icon="mail">mail</span>
+</div>
+</div>
+</div>
+</footer>
+<script>
+        // Smooth scroll reveal effect
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fade-in-up');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.glass-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Simple button active interaction
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mousedown', () => btn.classList.add('scale-95'));
+            btn.addEventListener('mouseup', () => btn.classList.remove('scale-95'));
+            btn.addEventListener('mouseleave', () => btn.classList.remove('scale-95'));
+        });
+    </script>
+<style>
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+        }
+        .glass-card { opacity: 0; } /* Initial state for observer */
+    </style>
+
+
+
+
+</body></html>
