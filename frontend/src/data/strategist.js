@@ -1,7 +1,7 @@
 export const MOCK_STRATEGIST_INVENTORY = [
   {
     id: "cyberpunk-442",
-    name: "CyberPunk #442",
+    name: "BountyNFT",
     collection: "MONAD PRIMATES",
     rarity: "RARE",
     estimatedValue: 12.5,

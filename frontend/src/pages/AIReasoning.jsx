@@ -55,6 +55,15 @@ export default function AIReasoning() {
   // Strategy values
   const recommendedStrategy = "Fast Competitive Auction";
   const confidenceValue = "98.4%";
+  const createdAuctionId = 'pending-1';
+
+  const handleAuctionCreated = () => {
+    navigate(`/auction/${createdAuctionId}`, {
+      state: {
+        statusOverride: 'Looking for bidders'
+      }
+    });
+  };
 
   return (
     <div className="bg-background text-on-surface font-headline min-h-screen select-none relative pb-10">
@@ -372,10 +381,10 @@ export default function AIReasoning() {
           <div className="mt-auto">
             {isComplete ? (
               <button
-                onClick={() => navigate('/winner')}
-                className="w-full py-5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-label text-xs uppercase font-extrabold tracking-widest rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+                onClick={handleAuctionCreated}
+                className="flex min-h-[72px] w-full items-center justify-center gap-4 rounded-full bg-[#f7bf3d] px-8 py-5 text-center text-sm font-black uppercase tracking-[0.16em] text-[#111018] shadow-[0_18px_40px_rgba(247,191,61,0.28)] transition-all hover:brightness-105 active:scale-[0.98] sm:px-12"
               >
-                <span className="material-symbols-outlined text-sm font-extrabold">check_circle</span>
+                <span className="material-symbols-outlined text-[24px] text-[#111018]">auto_awesome</span>
                 Auction Successfully Created
               </button>
             ) : (
